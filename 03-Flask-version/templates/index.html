@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Study Buddy</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        #chatbox {
+            width: 60%;
+            height: 400px;
+            margin: 20px auto;
+            padding: 10px;
+            background: white;
+            border: 1px solid #ccc;
+            overflow-y: scroll;
+            text-align: left;
+        }
+        #userInput {
+            width: 50%;
+            padding: 10px;
+        }
+        button {
+            padding: 10px 15px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>AI Study Buddy (Flask Version)</h2>
+
+<div id="chatbox"></div>
+
+<input type="text" id="userInput" placeholder="Type your message..." />
+<button onclick="sendMessage()">Send</button>
+
+<script>
+function sendMessage() {
+    let inputField = document.getElementById("userInput");
+    let message = inputField.value;
+    let chatbox = document.getElementById("chatbox");
+
+    if (message.trim() === "") return;
+
+    chatbox.innerHTML += "<b>You:</b> " + message + "<br>";
+
+    fetch("/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: message })
+    })
+    .then(response => response.json())
+    .then(data => {
+        chatbox.innerHTML += "<b>Bot:</b> " + data.reply + "<br><br>";
+        chatbox.scrollTop = chatbox.scrollHeight;
+    });
+
+    inputField.value = "";
+}
+</script>
+
+</body>
+</html>
